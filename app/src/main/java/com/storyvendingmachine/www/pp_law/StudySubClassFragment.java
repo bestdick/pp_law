@@ -4,9 +4,30 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.storyvendingmachine.www.pp_law.UrlBase.base_url;
 
 
 ///**
@@ -42,6 +63,13 @@ public class StudySubClassFragment extends Fragment {
      * @return A new instance of fragment StudySubClassFragment.
      */
     // TODO: Rename and change types and number of parameters
+
+    ListView listView;
+    StudyFlashcardListviewAdapter studyFlashcardListviewAdapter;
+    List<StudyFlashcardList> studyFlashcardLists;
+
+    int total_list_count;
+    int page;
     public static StudySubClassFragment newInstance(String param1, String param2) {
         StudySubClassFragment fragment = new StudySubClassFragment();
         Bundle args = new Bundle();
@@ -58,6 +86,8 @@ public class StudySubClassFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        total_list_count=0;
+        page=0;
     }
 
     @Override
@@ -65,9 +95,92 @@ public class StudySubClassFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootview =inflater.inflate(R.layout.fragment_study_sub_class, container, false);
-
+        initializer(rootview);
         return rootview;
     }
+
+    public void initializer(View rootview){
+        listView = rootview.findViewById(R.id.listView);
+        studyFlashcardLists = new ArrayList<StudyFlashcardList>();
+        studyFlashcardListviewAdapter= new StudyFlashcardListviewAdapter(getActivity(), studyFlashcardLists);
+        listView.setAdapter(studyFlashcardListviewAdapter);
+        swiper(rootview);
+        getFlashcardList();
+    }
+
+    public void swiper(View rootview){
+        final SwipeRefreshLayout mSwipeRefreshLayout = (SwipeRefreshLayout) rootview.findViewById(R.id.swiper);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                page=0;
+                studyFlashcardLists.clear();
+                getFlashcardList();
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
+    }
+    private void getFlashcardList(){
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        String url = base_url+"getFlashcardList.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+
+                    @Override
+                    public void onResponse(String response) {
+                        Log.e("exam list response", response);
+                        try {
+
+                                JSONObject jsonObject = new JSONObject(response);
+                                total_list_count = Integer.parseInt(jsonObject.getString("total_count"));
+                                JSONArray jsonArray = jsonObject.getJSONArray("response1");
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    String primary_key = jsonArray.getJSONObject(i).getString("primary_key");
+                                    String major_type = jsonArray.getJSONObject(i).getString("major_type");
+                                    String minor_type = jsonArray.getJSONObject(i).getString("minor_type");
+                                    String login_type = jsonArray.getJSONObject(i).getString("login_type");
+                                    String user_id = jsonArray.getJSONObject(i).getString("user_id");
+                                    String user_nickname = jsonArray.getJSONObject(i).getString("user_nickname");
+                                    String upload_date = jsonArray.getJSONObject(i).getString("upload_date");
+                                    String upload_time = jsonArray.getJSONObject(i).getString("upload_time");
+                                    String revised_date = jsonArray.getJSONObject(i).getString("revised_date");
+                                    String revised_time = jsonArray.getJSONObject(i).getString("revised_time");
+                                    String flashcard_hit = jsonArray.getJSONObject(i).getString("flashcard_hit");
+                                    String title = jsonArray.getJSONObject(i).getString("title");
+                                    String count = jsonArray.getJSONObject(i).getString("count");
+
+                                    StudyFlashcardList item = new StudyFlashcardList(primary_key, major_type, null, minor_type, null,
+                                            login_type, user_id, user_nickname, upload_date, upload_time, null, null, flashcard_hit, null,
+                                            title, count, null);
+                                    studyFlashcardLists.add(item);
+
+                                }
+                                studyFlashcardListviewAdapter.notifyDataSetChanged();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+//
+//                        examlistviewAdapter.notifyDataSetChanged();
+                    }},
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("are we here 6", error.toString());
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams(){
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", "passpop");
+                params.put("page", String.valueOf(page));
+                return params;
+            }
+        };
+        queue.add(stringRequest);
+    }
+
 
 //    // TODO: Rename method, update argument and hook method into UI event
 //    public void onButtonPressed(Uri uri) {

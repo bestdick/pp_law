@@ -6,9 +6,10 @@ package com.storyvendingmachine.www.pp_law;
 
 public class StudyFlashcardList {
     String flashcard_db_id;
-    String exam_code;
-    String exam_name;
-    String subject;
+    String major_type;
+    String major_type_kor;
+    String minor_type;
+    String minor_type_kor;
     String login_type;
     String user_id;
     String user_nickname;
@@ -30,28 +31,36 @@ public class StudyFlashcardList {
         this.flashcard_db_id = flashcard_db_id;
     }
 
-    public String getExam_code() {
-        return exam_code;
+    public String getMajor_type() {
+        return major_type;
     }
 
-    public void setExam_code(String exam_code) {
-        this.exam_code = exam_code;
+    public void setMajor_type(String major_type) {
+        this.major_type = major_type;
     }
 
-    public String getExam_name() {
-        return exam_name;
+    public String getMajor_type_kor() {
+        return major_type_kor;
     }
 
-    public void setExam_name(String exam_name) {
-        this.exam_name = exam_name;
+    public void setMajor_type_kor(String major_type_kor) {
+        this.major_type_kor = major_type_kor;
     }
 
-    public String getSubject() {
-        return subject;
+    public String getMinor_type() {
+        return minor_type;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
+    public void setMinor_type(String minor_type) {
+        this.minor_type = minor_type;
+    }
+
+    public String getMainor_type_kor() {
+        return minor_type_kor;
+    }
+
+    public void setMainor_type_kor(String mainor_type_kor) {
+        this.minor_type_kor = mainor_type_kor;
     }
 
     public String getLogin_type() {
@@ -150,11 +159,12 @@ public class StudyFlashcardList {
         this.flashcard_first_term = flashcard_first_term;
     }
 
-    public StudyFlashcardList(String flashcard_db_id, String exam_code, String exam_name, String subject, String login_type, String user_id, String user_nickname, String upload_date, String upload_time, String scrap_count, String comment_count, String hit_count, String like_count, String title, String flashcard_count, String flashcard_first_term) {
+    public StudyFlashcardList(String flashcard_db_id, String major_type, String major_type_kor, String minor_type, String minor_type_kor, String login_type, String user_id, String user_nickname, String upload_date, String upload_time, String scrap_count, String comment_count, String hit_count, String like_count, String title, String flashcard_count, String flashcard_first_term) {
         this.flashcard_db_id = flashcard_db_id;
-        this.exam_code = exam_code;
-        this.exam_name = exam_name;
-        this.subject = subject;
+        this.major_type = major_type;
+        this.major_type_kor = major_type_kor;
+        this.minor_type = minor_type;
+        this.minor_type_kor = minor_type_kor;
         this.login_type = login_type;
         this.user_id = user_id;
         this.user_nickname = user_nickname;

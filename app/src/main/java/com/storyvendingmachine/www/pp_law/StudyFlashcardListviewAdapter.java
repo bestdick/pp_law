@@ -14,10 +14,10 @@ import java.util.List;
 
 public class StudyFlashcardListviewAdapter extends BaseAdapter {
     private Context context;
-    private List<ExamListTypeA> list;
+    private List<StudyFlashcardList> list;
 
 
-    public StudyFlashcardListviewAdapter(Context context, List<ExamListTypeA> list) {
+    public StudyFlashcardListviewAdapter(Context context, List<StudyFlashcardList> list) {
         this.context = context;
         this.list= list;
     }
@@ -38,8 +38,16 @@ public class StudyFlashcardListviewAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         View v =View.inflate(context, R.layout.container_flashcard_listview_element, null);
+        TextView number_textView = v.findViewById(R.id.number_textView);
         TextView title_textView = v.findViewById(R.id.title_textView);
         TextView author_textView = v.findViewById(R.id.author_textView);
+
+        String title = list.get(i).getTitle();
+        String author_nickname = list.get(i).getUser_nickname();
+
+        number_textView.setText("Flash Card "+(i+1));
+        title_textView.setText(title);
+        author_textView.setText(author_nickname);
 
         return v;
     }
