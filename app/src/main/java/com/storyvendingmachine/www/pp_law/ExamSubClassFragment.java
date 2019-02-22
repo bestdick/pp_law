@@ -182,16 +182,18 @@ public class ExamSubClassFragment extends Fragment {
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     String exam_placed_year = jsonArray.getJSONObject(i).getString("year_round");
                                     ExamListTypeA item = new ExamListTypeA("year", exam_placed_year,
-                                            null, null, 0);
+                                            null, null, null, null, 0);
                                     examListTypeAList.add(item);
                                     JSONArray inner_data_array = jsonArray.getJSONObject(i).getJSONArray("inner_data");
                                     for (int j = 0; j < inner_data_array.length(); j++) {
+                                        String major_type = inner_data_array.getJSONObject(j).getString("major_type");
+                                        String major_type_kor = inner_data_array.getJSONObject(j).getString("major_type_kor");
                                         String minor_type = inner_data_array.getJSONObject(j).getString("minor_type");
                                         String minor_type_kor = inner_data_array.getJSONObject(j).getString("minor_type_kor");
                                         JSONArray second_inner_data_array = inner_data_array.getJSONObject(j).getJSONArray("second_inner_data");
                                         int count_questions = second_inner_data_array.length();
                                         ExamListTypeA inner_item = new ExamListTypeA("all", exam_placed_year,
-                                                minor_type, minor_type_kor, count_questions);
+                                                major_type, major_type_kor, minor_type, minor_type_kor, count_questions);
                                         examListTypeAList.add(inner_item);
                                     }
                                 }
@@ -216,6 +218,7 @@ public class ExamSubClassFragment extends Fragment {
             protected Map<String, String> getParams(){
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("token", "passpop");
+                params.put("type", "list");
                 params.put("major_type", major_type);
                 return params;
             }

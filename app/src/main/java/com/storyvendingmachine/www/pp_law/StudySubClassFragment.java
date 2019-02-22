@@ -1,6 +1,8 @@
 package com.storyvendingmachine.www.pp_law;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -106,6 +109,7 @@ public class StudySubClassFragment extends Fragment {
         listView.setAdapter(studyFlashcardListviewAdapter);
         swiper(rootview);
         getFlashcardList();
+        flashcard_list_header();
     }
 
     public void swiper(View rootview){
@@ -119,6 +123,24 @@ public class StudySubClassFragment extends Fragment {
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
+    }
+    public void flashcard_list_header(){
+        View header_view = getLayoutInflater().inflate(R.layout.container_flashcard_listview_header, null);
+        final TextView view_category_textView = (TextView) header_view.findViewById(R.id.view_category_textView);
+        TextView create_flashcard_textView = (TextView) header_view.findViewById(R.id.create_flashcard_textView);
+        view_category_textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectAlertDialog(view_category_textView);
+            }
+        });
+        create_flashcard_textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        listView.addHeaderView(header_view);
     }
     private void getFlashcardList(){
         RequestQueue queue = Volley.newRequestQueue(getActivity());
@@ -148,10 +170,11 @@ public class StudySubClassFragment extends Fragment {
                                     String flashcard_hit = jsonArray.getJSONObject(i).getString("flashcard_hit");
                                     String title = jsonArray.getJSONObject(i).getString("title");
                                     String count = jsonArray.getJSONObject(i).getString("count");
+                                    String first_term =jsonArray.getJSONObject(i).getString("first_term");
 
                                     StudyFlashcardList item = new StudyFlashcardList(primary_key, major_type, null, minor_type, null,
                                             login_type, user_id, user_nickname, upload_date, upload_time, null, null, flashcard_hit, null,
-                                            title, count, null);
+                                            title, count, first_term);
                                     studyFlashcardLists.add(item);
 
                                 }
@@ -174,11 +197,41 @@ public class StudySubClassFragment extends Fragment {
             protected Map<String, String> getParams(){
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("token", "passpop");
+                params.put("type", "list");
+                params.put("sub_type", "recent");
                 params.put("page", String.valueOf(page));
                 return params;
             }
         };
         queue.add(stringRequest);
+    }
+
+    public void selectAlertDialog(final TextView view_category_textView){
+        final CharSequence list[] = new CharSequence[]{"#최신순", "#인기순", "#나의카드", "#나의폴더"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("목록 정렬");
+        builder.setItems(list, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.e("value is", "" + which);
+                switch (which) {
+                    case 0:
+                        view_category_textView.setText(list[0].toString());
+                        break;
+                    case 1:
+                        view_category_textView.setText(list[1].toString());
+                        break;
+                    case 2:
+                        view_category_textView.setText(list[2].toString());
+                        break;
+                    case 3:
+                        view_category_textView.setText(list[3].toString());
+                        break;
+                }
+            }
+        });
+        builder.show();
     }
 
 

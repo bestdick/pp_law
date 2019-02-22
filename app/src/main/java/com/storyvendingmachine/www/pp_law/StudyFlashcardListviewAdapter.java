@@ -1,6 +1,7 @@
 package com.storyvendingmachine.www.pp_law;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -40,15 +41,45 @@ public class StudyFlashcardListviewAdapter extends BaseAdapter {
         View v =View.inflate(context, R.layout.container_flashcard_listview_element, null);
         TextView number_textView = v.findViewById(R.id.number_textView);
         TextView title_textView = v.findViewById(R.id.title_textView);
-        TextView author_textView = v.findViewById(R.id.author_textView);
+        TextView first_term_textView = v.findViewById(R.id.first_term_textView);
+        TextView date_textView = v.findViewById(R.id.date_textView);
 
+
+        TextView author_textView = v.findViewById(R.id.author_textView);
+        TextView hit_count_textView = v.findViewById(R.id.hit_count_textView);
+
+
+        final String primary_key = list.get(i).getFlashcard_db_id();
         String title = list.get(i).getTitle();
+        String date = list.get(i).getUpload_date();
+        String first_term = list.get(i).getFlashcard_first_term();
+
         String author_nickname = list.get(i).getUser_nickname();
+        String hit_count = list.get(i).getHit_count();
 
         number_textView.setText("Flash Card "+(i+1));
         title_textView.setText(title);
+        first_term_textView.setText(first_term);
+        date_textView.setText(date);
         author_textView.setText(author_nickname);
+        hit_count_textView.setText(hit_count);
+
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, StudyFlashcardViewActivity.class);
+                intent.putExtra("type", "regular");
+                intent.putExtra("primary_key", primary_key);
+
+//                ((MainActivity) context).startActivityForResult(intent, REQUEST_CODE_FOR_FLASHCARDFRAGMENT);
+                context.startActivity(intent);
+                slide_left_and_slide_in();
+            }
+        });
 
         return v;
+    }
+    public void slide_left_and_slide_in(){
+        ((MainActivity) context).overridePendingTransition(R.anim.slide_in, R.anim.slide_left_bit); // 처음이 앞으로 들어올 activity 두번째가 현재 activity 가 할 애니매이션
     }
 }

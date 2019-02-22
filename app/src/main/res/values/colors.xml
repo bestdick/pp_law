@@ -4,5 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorWhite">#ffffff</color>
+    <color name="colorUnderLineBlue">#5DADE2</color>
     <color name="colorCrimsonRed">#990000</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorGrey">#95A5A6</color>
 </resources>
