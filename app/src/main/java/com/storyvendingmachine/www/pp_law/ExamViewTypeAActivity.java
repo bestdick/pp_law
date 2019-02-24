@@ -1,10 +1,14 @@
 package com.storyvendingmachine.www.pp_law;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -56,8 +60,21 @@ public class ExamViewTypeAActivity extends AppCompatActivity {
                         Log.e("exam selected response", response);
                         try {
                                 JSONObject jsonObject = new JSONObject(response);
-                                JSONArray jsonArray = jsonObject.getJSONArray("response");
+                                String access = jsonObject.getString("access");
+                                if(access.equals("valid")){
+                                    JSONObject response1 = jsonObject.getJSONObject("response1");
+                                    String question_count_str = response1.getString("question_count");
+                                    int question_count_int = Integer.parseInt(question_count_str);
+                                    JSONArray exam_data = response1.getJSONArray("exam_data");
 
+                                    ExamViewTypeAViewPagerAdapter examViewTypeAViewPagerAdapter = new ExamViewTypeAViewPagerAdapter(getSupportFragmentManager());
+                                    examViewTypeAViewPagerAdapter.count = question_count_int;
+                                    examViewTypeAViewPagerAdapter.jsonArray = exam_data;
+
+                                    eviewPager.setAdapter(examViewTypeAViewPagerAdapter);
+                                    eviewPager.setOffscreenPageLimit(question_count_int);
+
+                                }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -83,5 +100,38 @@ public class ExamViewTypeAActivity extends AppCompatActivity {
             }
         };
         queue.add(stringRequest);
+    }
+
+    public class BackgroundTask extends AsyncTask<Void, Void, String> {
+        Context context;
+        int count;
+        JSONArray jsonArray;
+        ViewPager viewPager;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(Void... voids){
+            ExamViewTypeAViewPagerAdapter examViewTypeAViewPagerAdapter = new ExamViewTypeAViewPagerAdapter(getSupportFragmentManager());
+            examViewTypeAViewPagerAdapter.count = count;
+            examViewTypeAViewPagerAdapter.jsonArray = jsonArray;
+
+            viewPager.setAdapter(examViewTypeAViewPagerAdapter);
+            viewPager.setOffscreenPageLimit(count);
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... voids) {
+            //** INPUT VALUSE IS THE MIDDLE VOID **
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+        }
     }
 }
