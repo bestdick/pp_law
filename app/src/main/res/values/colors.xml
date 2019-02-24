@@ -8,4 +8,5 @@
     <color name="colorCrimsonRed">#990000</color>
     <color name="colorBlack">#000000</color>
     <color name="colorGrey">#95A5A6</color>
+    <color name="colorLightgrey">#D6DBDF</color>
 </resources>

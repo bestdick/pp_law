@@ -22,13 +22,28 @@ public class MainActivity extends AppCompatActivity {
 //    ExamFragment examFragment;
 //    StudyFragment studyFragment;
 //    SettingFragment settingFragment;
+
+    static String LoginType;
+    static String G_user_id;
+    static String G_user_level;
+    static String G_user_nickname;
+    static String G_user_thumbnail;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Login_Initializer();
         permission();
         initializer();
 
+    }
+    public void Login_Initializer(){
+        LoginType = null;
+        G_user_id = null;
+        G_user_level =null;
+        G_user_nickname = null;
+        G_user_thumbnail = null;
     }
     public void initializer(){
         app_start_fragment_initializer();

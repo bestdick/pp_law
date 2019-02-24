@@ -19,11 +19,11 @@ public class ExamSubClassViewPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         Log.e("item pointer", Integer.toString(position));
         if (position == 0) {
-            return ExamSubClassFragment.newInstance("major_1003", null);
+            return ExamSubClassFragment.newInstance("major_1001", null);
         } else if(position == 1){
             return ExamSubClassFragment.newInstance("major_1002", null);
         }else{
-            return ExamSubClassFragment.newInstance("major_1001", null);
+            return ExamSubClassFragment.newInstance("major_1003", null);
         }
     }
     @Override

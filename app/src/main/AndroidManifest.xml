@@ -22,7 +22,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".StudyFlashcardViewActivity" />
-        <activity android:name=".ExamViewTypeAActivity"></activity>
+        <activity android:name=".ExamViewTypeAActivity" />
+        <activity android:name=".ExamResultTypeAActivity"></activity>
     </application>
 
 </manifest>
