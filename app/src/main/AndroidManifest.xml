@@ -18,6 +18,7 @@
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key" />
+
         <activity android:name=".MainActivity" />
         <activity android:name=".StudyFlashcardViewActivity" />
         <activity android:name=".ExamViewTypeAActivity" />
@@ -29,7 +30,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".LoggedInActivity" />
+        <activity android:name=".FlashCardWriteActivity"></activity>
     </application>
 
 </manifest>

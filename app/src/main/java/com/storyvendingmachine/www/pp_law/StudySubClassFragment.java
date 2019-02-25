@@ -3,6 +3,7 @@ package com.storyvendingmachine.www.pp_law;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -30,6 +31,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.storyvendingmachine.www.pp_law.MainActivity.G_user_id;
+import static com.storyvendingmachine.www.pp_law.MainActivity.LoginType;
+import static com.storyvendingmachine.www.pp_law.MainActivity.REQUEST_CODE_FOR_FLASHCARD_WRITE;
 import static com.storyvendingmachine.www.pp_law.UrlBase.base_url;
 
 
@@ -137,7 +141,15 @@ public class StudySubClassFragment extends Fragment {
         create_flashcard_textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if(LoginType == null|| G_user_id == null){
+//                    String message = "플래시카드 작성을 하시려면 로그인 후 작성해주시기 바람니다.";
+//                    notifier(message);
+                }else{
+                    Intent intent = new Intent(getActivity(), FlashCardWriteActivity.class);
+                    intent.putExtra("type", "new");
+                    startActivityForResult(intent, REQUEST_CODE_FOR_FLASHCARD_WRITE);
+//                    slide_left_and_slide_in();
+                }
             }
         });
         listView.addHeaderView(header_view);

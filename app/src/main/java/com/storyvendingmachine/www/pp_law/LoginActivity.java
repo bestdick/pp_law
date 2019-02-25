@@ -62,16 +62,16 @@ public class LoginActivity extends AppCompatActivity {
         input_password = (EditText) findViewById(R.id.user_password);
 
         //****************kakao login **************************
-        callback = new SessionCallback(this, "login_activity", editor);
-        callback.pb = (ProgressBar) findViewById(R.id.LoginActivityProgressBar);
-
-        Session.getCurrentSession().addCallback(callback);
-        if (Session.getCurrentSession().checkAndImplicitOpen()) {
-            // 액세스토큰 유효하거나 리프레시 토큰으로 액세스 토큰 갱신을 시도할 수 있는 경우
-        } else {
-            // 무조건 재로그인을 시켜야 하는 경우
-//            Session.getCurrentSession().clearCallbacks();
-        }
+//        callback = new SessionCallback(this, "login_activity", editor);
+//        callback.pb = (ProgressBar) findViewById(R.id.LoginActivityProgressBar);
+//
+//        Session.getCurrentSession().addCallback(callback);
+//        if (Session.getCurrentSession().checkAndImplicitOpen()) {
+//            // 액세스토큰 유효하거나 리프레시 토큰으로 액세스 토큰 갱신을 시도할 수 있는 경우
+//        } else {
+//            // 무조건 재로그인을 시켜야 하는 경우
+////            Session.getCurrentSession().clearCallbacks();
+//        }
         //****************kakao login **************************
 
         Button loginButton = (Button) findViewById(R.id.login_button);
@@ -164,7 +164,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginButtonClicked(){
-
         RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
 //        String url = "http://www.storyvendingmachine.com/android/front_page_normal_login_check.php";
         String url = "http://www.joonandhoon.com/pp/PassPop/android/server/front_page_normal_login_check.php";

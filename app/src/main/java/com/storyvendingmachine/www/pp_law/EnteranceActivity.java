@@ -53,26 +53,27 @@ public class EnteranceActivity extends AppCompatActivity {
         String LT = login_remember.getString("login_type", "");
         Log.e("login_type:::", LT);
 
-        if(LT.equals("kakao")){
-            new Handler().postDelayed(new Runnable() {// 1 초 후에 실행
-                @Override
-                public void run() {
-                    //****************kakao login **************************
-                    callback = new SessionCallback(EnteranceActivity.this, "enterance_activity", editor);
-                    callback.pb = (ProgressBar) findViewById(R.id.progress_bar);
-
-                    Session.getCurrentSession().addCallback(callback);
-                    if (Session.getCurrentSession().checkAndImplicitOpen()) {
-                        // 액세스토큰 유효하거나 리프레시 토큰으로 액세스 토큰 갱신을 시도할 수 있는 경우
-                    } else {
-                        // 무조건 재로그인을 시켜야 하는 경우
-                        //            Session.getCurrentSession().clearCallbacks();
-                    }
-                    //****************kakao login **************************
-
-                }
-            }, 800);
-        }else if(LT.equals("normal")){
+//        if(LT.equals("kakao")){
+//            new Handler().postDelayed(new Runnable() {// 1 초 후에 실행
+//                @Override
+//                public void run() {
+//                    //****************kakao login **************************
+//                    callback = new SessionCallback(EnteranceActivity.this, "enterance_activity", editor);
+//                    callback.pb = (ProgressBar) findViewById(R.id.progress_bar);
+//
+//                    Session.getCurrentSession().addCallback(callback);
+//                    if (Session.getCurrentSession().checkAndImplicitOpen()) {
+//                        // 액세스토큰 유효하거나 리프레시 토큰으로 액세스 토큰 갱신을 시도할 수 있는 경우
+//                    } else {
+//                        // 무조건 재로그인을 시켜야 하는 경우
+//                        //            Session.getCurrentSession().clearCallbacks();
+//                    }
+//                    //****************kakao login **************************
+//
+//                }
+//            }, 800);
+//        }else
+            if(LT.equals("normal")){
             new Handler().postDelayed(new Runnable() {// 1 초 후에 실행
                 @Override
                 public void run() {
@@ -185,7 +186,7 @@ public class EnteranceActivity extends AppCompatActivity {
                                 editor.putString("user_password", "");
                                 editor.commit();
 
-                                String str_null="null";
+                                String str_null=null;
                                 Intent intent = new Intent(EnteranceActivity.this, MainActivity.class);
                                 intent.putExtra("login_type", str_null);
                                 intent.putExtra("user_id", str_null);
