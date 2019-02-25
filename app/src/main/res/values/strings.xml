@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">패스팝 LAW</string>
+    <string name="kakao_app_key">0c8a46389f813aa1b3ff50a16be7f6cf</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="footer_string">created and designed by park and moon,\npowered by parkbros</string>
+    <string name="greeting_login">패스팝에 오신걸 환영합니다. 회원 가입 및 로그인을 하시면 더 많은 기능들을 사용하실수 있습니다.
+    로그인 하시면 기출 시험 통계, 플래시카드 노트 작성 및 폴더 저장 및 다양한 혜택을 제공 받을 수 있습니다.</string>
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

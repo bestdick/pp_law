@@ -3,6 +3,7 @@ package com.storyvendingmachine.www.pp_law;
 
 
 import android.Manifest;
+import android.content.Intent;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
@@ -13,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
@@ -48,6 +50,15 @@ public class MainActivity extends AppCompatActivity {
     public void initializer(){
         app_start_fragment_initializer();
         TabItemSelector();
+        ImageView toolbar_thumbnail_imageView = (ImageView) findViewById(R.id.toolbar_thumbnail_imageView);
+        toolbar_thumbnail_imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent =new Intent(MainActivity.this, LoginActivity.class);
+                startActivityForResult(intent, 10002);// 10002 카카오 로그인 RESULT 값
+//                slide_left_and_slide_in();
+            }
+        });
     }
     public void toolbarTitle(String title_str){
         TextView toolbar_title_textView = (TextView) findViewById(R.id.toolbar_title_textView);

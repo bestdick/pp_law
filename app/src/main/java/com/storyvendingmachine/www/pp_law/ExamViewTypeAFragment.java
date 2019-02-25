@@ -160,55 +160,80 @@ public class ExamViewTypeAFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 UserSelectedAnswer.set(mParam2, 1);
-                a_n_1.setTextColor(getResources().getColor(R.color.colorCrimsonRed));
+                a_n_1.setTextColor(getResources().getColor(R.color.colorWhite));
+                a_n_1.setBackground(getResources().getDrawable(R.drawable.answer_selected_container));
                 a_n_2.setTextColor(getResources().getColor(R.color.colorBlack));
+                a_n_2.setBackground(null);
                 a_n_3.setTextColor(getResources().getColor(R.color.colorBlack));
+                a_n_3.setBackground(null);
                 a_n_4.setTextColor(getResources().getColor(R.color.colorBlack));
+                a_n_4.setBackground(null);
                 a_n_5.setTextColor(getResources().getColor(R.color.colorBlack));
+                a_n_5.setBackground(null);
             }
         });
         a_2_c.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 UserSelectedAnswer.set(mParam2, 2);
-                a_n_2.setTextColor(getResources().getColor(R.color.colorCrimsonRed));
+                a_n_2.setTextColor(getResources().getColor(R.color.colorWhite));
+                a_n_2.setBackground(getResources().getDrawable(R.drawable.answer_selected_container));
                 a_n_1.setTextColor(getResources().getColor(R.color.colorBlack));
+                a_n_1.setBackground(null);
                 a_n_3.setTextColor(getResources().getColor(R.color.colorBlack));
+                a_n_3.setBackground(null);
                 a_n_4.setTextColor(getResources().getColor(R.color.colorBlack));
+                a_n_4.setBackground(null);
                 a_n_5.setTextColor(getResources().getColor(R.color.colorBlack));
+                a_n_5.setBackground(null);
             }
         });
         a_3_c.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 UserSelectedAnswer.set(mParam2, 3);
-                a_n_3.setTextColor(getResources().getColor(R.color.colorCrimsonRed));
+                a_n_3.setTextColor(getResources().getColor(R.color.colorWhite));
+                a_n_3.setBackground(getResources().getDrawable(R.drawable.answer_selected_container));
                 a_n_2.setTextColor(getResources().getColor(R.color.colorBlack));
+                a_n_2.setBackground(null);
                 a_n_1.setTextColor(getResources().getColor(R.color.colorBlack));
+                a_n_1.setBackground(null);
                 a_n_4.setTextColor(getResources().getColor(R.color.colorBlack));
+                a_n_4.setBackground(null);
                 a_n_5.setTextColor(getResources().getColor(R.color.colorBlack));
+                a_n_5.setBackground(null);
             }
         });
         a_4_c.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 UserSelectedAnswer.set(mParam2, 4);
-                a_n_4.setTextColor(getResources().getColor(R.color.colorCrimsonRed));
+                a_n_4.setTextColor(getResources().getColor(R.color.colorWhite));
+                a_n_4.setBackground(getResources().getDrawable(R.drawable.answer_selected_container));
                 a_n_2.setTextColor(getResources().getColor(R.color.colorBlack));
+                a_n_2.setBackground(null);
                 a_n_3.setTextColor(getResources().getColor(R.color.colorBlack));
+                a_n_3.setBackground(null);
                 a_n_1.setTextColor(getResources().getColor(R.color.colorBlack));
+                a_n_1.setBackground(null);
                 a_n_5.setTextColor(getResources().getColor(R.color.colorBlack));
+                a_n_5.setBackground(null);
             }
         });
         a_5_c.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 UserSelectedAnswer.set(mParam2, 5);
-                a_n_5.setTextColor(getResources().getColor(R.color.colorCrimsonRed));
+                a_n_5.setTextColor(getResources().getColor(R.color.colorWhite));
+                a_n_5.setBackground(getResources().getDrawable(R.drawable.answer_selected_container));
                 a_n_2.setTextColor(getResources().getColor(R.color.colorBlack));
+                a_n_2.setBackground(null);
                 a_n_3.setTextColor(getResources().getColor(R.color.colorBlack));
+                a_n_3.setBackground(null);
                 a_n_4.setTextColor(getResources().getColor(R.color.colorBlack));
+                a_n_4.setBackground(null);
                 a_n_1.setTextColor(getResources().getColor(R.color.colorBlack));
+                a_n_1.setBackground(null);
             }
         });
     }

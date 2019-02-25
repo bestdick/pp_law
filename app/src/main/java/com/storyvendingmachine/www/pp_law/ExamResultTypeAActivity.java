@@ -84,7 +84,6 @@ public class ExamResultTypeAActivity extends AppCompatActivity {
                 return "선택형";
                 default:
                     return null;
-
         }
     }
 
