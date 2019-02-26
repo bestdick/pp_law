@@ -75,6 +75,7 @@ public class StudySubClassFragment extends Fragment {
     StudyFlashcardListviewAdapter studyFlashcardListviewAdapter;
     List<StudyFlashcardList> studyFlashcardLists;
 
+    int flashcard_menu;
     int total_list_count;
     int page;
     public static StudySubClassFragment newInstance(String param1, String param2) {
@@ -93,6 +94,7 @@ public class StudySubClassFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        flashcard_menu = 0;
         total_list_count=0;
         page=0;
     }
@@ -103,19 +105,9 @@ public class StudySubClassFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootview =inflater.inflate(R.layout.fragment_study_sub_class, container, false);
         initializer(rootview);
+        swiper(rootview);
         return rootview;
     }
-
-    public void initializer(View rootview){
-        listView = rootview.findViewById(R.id.listView);
-        studyFlashcardLists = new ArrayList<StudyFlashcardList>();
-        studyFlashcardListviewAdapter= new StudyFlashcardListviewAdapter(getActivity(), studyFlashcardLists);
-        listView.setAdapter(studyFlashcardListviewAdapter);
-        swiper(rootview);
-        getFlashcardList();
-        flashcard_list_header();
-    }
-
     public void swiper(View rootview){
         final SwipeRefreshLayout mSwipeRefreshLayout = (SwipeRefreshLayout) rootview.findViewById(R.id.swiper);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -128,6 +120,17 @@ public class StudySubClassFragment extends Fragment {
             }
         });
     }
+
+    public void initializer(View rootview){
+        listView = rootview.findViewById(R.id.listView);
+        studyFlashcardLists = new ArrayList<StudyFlashcardList>();
+        studyFlashcardListviewAdapter= new StudyFlashcardListviewAdapter(getActivity(), studyFlashcardLists);
+        listView.setAdapter(studyFlashcardListviewAdapter);
+
+        getFlashcardList();
+        flashcard_list_header();
+    }
+
     public void flashcard_list_header(){
         View header_view = getLayoutInflater().inflate(R.layout.container_flashcard_listview_header, null);
         final TextView view_category_textView = (TextView) header_view.findViewById(R.id.view_category_textView);
@@ -135,7 +138,12 @@ public class StudySubClassFragment extends Fragment {
         view_category_textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectAlertDialog(view_category_textView);
+                if(LoginType.equals("null") || G_user_id.equals("null")){
+                    selectAlertDialog_Not_loggedIn(view_category_textView);
+                }else{
+                    selectAlertDialog(view_category_textView);
+                }
+
             }
         });
         create_flashcard_textView.setOnClickListener(new View.OnClickListener() {
@@ -223,8 +231,8 @@ public class StudySubClassFragment extends Fragment {
             protected Map<String, String> getParams(){
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("token", "passpop");
-                params.put("type", "list");
-                params.put("sub_type", "recent");
+                params.put("type", "list");// list or selected
+                params.put("flashcard_menu", String.valueOf(flashcard_menu));
                 params.put("page", String.valueOf(page));
                 return params;
             }
@@ -232,6 +240,35 @@ public class StudySubClassFragment extends Fragment {
         queue.add(stringRequest);
     }
 
+    public void selectAlertDialog_Not_loggedIn(final TextView view_category_textView){
+        final CharSequence list[] = new CharSequence[]{"#최신순", "#인기순"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("목록 정렬");
+        builder.setItems(list, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.e("value is", "" + which);
+                switch (which) {
+                    case 0:
+                        view_category_textView.setText(list[0].toString());
+                        studyFlashcardLists.clear();
+                        flashcard_menu = 0;
+                        page=0;
+                        getFlashcardList();
+                        break;
+                    case 1:
+                        studyFlashcardLists.clear();
+                        flashcard_menu = 1;
+                        page=0;
+                        getFlashcardList();
+                        view_category_textView.setText(list[1].toString());
+                        break;
+                }
+            }
+        });
+        builder.show();
+    }
     public void selectAlertDialog(final TextView view_category_textView){
         final CharSequence list[] = new CharSequence[]{"#최신순", "#인기순", "#나의카드", "#나의폴더"};
 
@@ -244,14 +281,30 @@ public class StudySubClassFragment extends Fragment {
                 switch (which) {
                     case 0:
                         view_category_textView.setText(list[0].toString());
+                        studyFlashcardLists.clear();
+                        flashcard_menu = 0;
+                        page=0;
+                        getFlashcardList();
                         break;
                     case 1:
+                        studyFlashcardLists.clear();
+                        flashcard_menu = 1;
+                        page=0;
+                        getFlashcardList();
                         view_category_textView.setText(list[1].toString());
                         break;
                     case 2:
+                        studyFlashcardLists.clear();
+                        flashcard_menu = 2;
+                        page=0;
+                        getFlashcardList();
                         view_category_textView.setText(list[2].toString());
                         break;
                     case 3:
+                        studyFlashcardLists.clear();
+                        flashcard_menu = 3;
+                        page=0;
+                        getFlashcardList();
                         view_category_textView.setText(list[3].toString());
                         break;
                 }

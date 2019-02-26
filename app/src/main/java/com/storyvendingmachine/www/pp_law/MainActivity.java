@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         G_user_nickname = intent.getStringExtra("user_nickname");
         G_user_thumbnail = intent.getStringExtra("user_thumbnail");
 
-        if(LoginType == null|| G_user_id == null){
+        if(LoginType.equals("null")|| G_user_id.equals("null")){
             toolbar_thumbnail_imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

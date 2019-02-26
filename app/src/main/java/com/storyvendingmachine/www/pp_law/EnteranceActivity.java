@@ -85,8 +85,16 @@ public class EnteranceActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     Intent intent = new Intent(EnteranceActivity.this, MainActivity.class);
+                    String str_null="null";
+                    intent.putExtra("login_type", str_null);
+                    intent.putExtra("user_id", str_null);
+                    intent.putExtra("member_level", str_null);
+                    intent.putExtra("user_nickname", str_null);
+                    intent.putExtra("user_thumbnail", str_null);
+                    intent.putExtra("user_selected_last_exam_code", str_null);
+                    intent.putExtra("user_selected_last_exam_name", str_null);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out); // 처번째가 앞으로 들어올 activity 두번째가 현재 activity 가 할 애니매이션
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, 800);
@@ -122,11 +130,17 @@ public class EnteranceActivity extends AppCompatActivity {
 
                     Toast.makeText(EnteranceActivity.this, "preference empty 2", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(EnteranceActivity.this, MainActivity.class);
+                    String str_null="null";
+                    intent.putExtra("login_type", str_null);
+                    intent.putExtra("user_id", str_null);
+                    intent.putExtra("member_level", str_null);
+                    intent.putExtra("user_nickname", str_null);
+                    intent.putExtra("user_thumbnail", str_null);
+                    intent.putExtra("user_selected_last_exam_code", str_null);
+                    intent.putExtra("user_selected_last_exam_name", str_null);
                     startActivity(intent);
-                    finish();
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-
-
+                    finish();
 
                 }
             }
@@ -142,6 +156,7 @@ public class EnteranceActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        Log.e("enterance response", response);
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             JSONArray jsonArray = jsonObject.getJSONArray("response");
@@ -186,7 +201,7 @@ public class EnteranceActivity extends AppCompatActivity {
                                 editor.putString("user_password", "");
                                 editor.commit();
 
-                                String str_null=null;
+                                String str_null="null";
                                 Intent intent = new Intent(EnteranceActivity.this, MainActivity.class);
                                 intent.putExtra("login_type", str_null);
                                 intent.putExtra("user_id", str_null);

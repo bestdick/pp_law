@@ -32,7 +32,8 @@
         </activity>
         <activity android:name=".LoginActivity" />
         <activity android:name=".LoggedInActivity" />
-        <activity android:name=".FlashCardWriteActivity"></activity>
+        <activity android:name=".FlashCardWriteActivity" />
+        <activity android:name=".CommentNoteWriteActivity"></activity>
     </application>
 
 </manifest>
