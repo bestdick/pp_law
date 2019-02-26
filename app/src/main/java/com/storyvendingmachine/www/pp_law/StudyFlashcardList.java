@@ -13,6 +13,7 @@ public class StudyFlashcardList {
     String login_type;
     String user_id;
     String user_nickname;
+    String user_thumbnail;
     String upload_date;
     String upload_time;
     String scrap_count;
@@ -159,7 +160,23 @@ public class StudyFlashcardList {
         this.flashcard_first_term = flashcard_first_term;
     }
 
-    public StudyFlashcardList(String flashcard_db_id, String major_type, String major_type_kor, String minor_type, String minor_type_kor, String login_type, String user_id, String user_nickname, String upload_date, String upload_time, String scrap_count, String comment_count, String hit_count, String like_count, String title, String flashcard_count, String flashcard_first_term) {
+    public String getMinor_type_kor() {
+        return minor_type_kor;
+    }
+
+    public void setMinor_type_kor(String minor_type_kor) {
+        this.minor_type_kor = minor_type_kor;
+    }
+
+    public String getUser_thumbnail() {
+        return user_thumbnail;
+    }
+
+    public void setUser_thumbnail(String user_thumbnail) {
+        this.user_thumbnail = user_thumbnail;
+    }
+
+    public StudyFlashcardList(String flashcard_db_id, String major_type, String major_type_kor, String minor_type, String minor_type_kor, String login_type, String user_id, String user_nickname, String user_thumbnail, String upload_date, String upload_time, String scrap_count, String comment_count, String hit_count, String like_count, String title, String flashcard_count, String flashcard_first_term) {
         this.flashcard_db_id = flashcard_db_id;
         this.major_type = major_type;
         this.major_type_kor = major_type_kor;
@@ -168,6 +185,7 @@ public class StudyFlashcardList {
         this.login_type = login_type;
         this.user_id = user_id;
         this.user_nickname = user_nickname;
+        this.user_thumbnail = user_thumbnail;
         this.upload_date = upload_date;
         this.upload_time = upload_time;
         this.scrap_count = scrap_count;

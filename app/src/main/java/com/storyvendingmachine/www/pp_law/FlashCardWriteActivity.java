@@ -6,6 +6,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +36,7 @@ import java.util.Map;
 
 import static com.storyvendingmachine.www.pp_law.MainActivity.G_user_id;
 import static com.storyvendingmachine.www.pp_law.MainActivity.LoginType;
+import static com.storyvendingmachine.www.pp_law.UrlBase.base_url;
 
 public class FlashCardWriteActivity extends AppCompatActivity {
     final static int RESULT_CODE_SELECT_EXAM = 30001;
@@ -56,6 +58,7 @@ public class FlashCardWriteActivity extends AppCompatActivity {
     String subject_number;
     String flashcard_db_id;
 
+    String minor_type;
 
     JSONObject header_jsonObject;
     JSONObject jsonObjectTotal;
@@ -81,6 +84,7 @@ public class FlashCardWriteActivity extends AppCompatActivity {
         flashcard_db_id="null";
         selected_exam_name = "null";
         selected_exam_code = "null";
+        minor_type = "all";
         subject_name="전체";
         subject_code="0";
         subject_number="all_subjects";
@@ -104,7 +108,6 @@ public class FlashCardWriteActivity extends AppCompatActivity {
 
         headerContent();
         uploadButtonProcessDeco("new", "작성");
-
         addFlashCardContainer();
     }
     public void initializer_revise(Intent intent){
@@ -226,18 +229,23 @@ public class FlashCardWriteActivity extends AppCompatActivity {
                 switch (which) {
                     case 0:
                         view_category_textView.setText(list[0].toString());
+                        minor_type = "all";
                         break;
                     case 1:
                         view_category_textView.setText(list[1].toString());
+                        minor_type = "minor_2001";
                         break;
                     case 2:
                         view_category_textView.setText(list[2].toString());
+                        minor_type = "minor_2002";
                         break;
                     case 3:
                         view_category_textView.setText(list[3].toString());
+                        minor_type = "minor_2003";
                         break;
                     case 4:
                         view_category_textView.setText(list[4].toString());
+                        minor_type = "minor_2004";
                         break;
                 }
             }
@@ -273,7 +281,7 @@ public class FlashCardWriteActivity extends AppCompatActivity {
                             String def = flashcardwriteList.get(i).getDef();
                             try {
                                 jsonObject.put("term", changeLineTransform(term));
-                                jsonObject.put("definition", changeLineTransform(def));
+                                jsonObject.put("def", changeLineTransform(def));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -281,9 +289,7 @@ public class FlashCardWriteActivity extends AppCompatActivity {
                         }
                         try {
                             jsonObjectTotal.put("title", changeLineTransform(flashcard_title_editText.getText().toString()));
-                            jsonObjectTotal.put("exam_code", selected_exam_code);
-                            jsonObjectTotal.put("subject_number", subject_number);
-                            jsonObjectTotal.put("flashcards", jsonArray);
+                            jsonObjectTotal.put("flashcard", jsonArray);
                             if(flashcard_write_type.equals("new")){
                                 String message = "플래시카드를 업로드 하시겠습니까?";
                                 String positive_message = "확인";
@@ -348,7 +354,8 @@ public class FlashCardWriteActivity extends AppCompatActivity {
     public void uploadWrittenFlashCard(final JSONObject jsonObject, final String flashcard_write_type){
         final String jsonObject_str = jsonObject.toString();
         RequestQueue queue = Volley.newRequestQueue(FlashCardWriteActivity.this);
-        String url = "http://www.joonandhoon.com/pp/PassPop/android/server/uploadWrittenFlashCard.php";
+//        String url = "http://www.joonandhoon.com/pp/PassPop/android/server/uploadWrittenFlashCard.php";
+        String url =base_url+"uploadWrittenFlashCard.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -400,8 +407,8 @@ public class FlashCardWriteActivity extends AppCompatActivity {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("token", "passpop");
-                params.put("exam_code", selected_exam_code);
-                params.put("subject", subject_number);
+                params.put("major_type", "all");
+                params.put("minor_type", minor_type);
                 params.put("login_type", LoginType);
                 params.put("user_id", G_user_id);
                 params.put("flashcard_data", jsonObject_str);
@@ -418,9 +425,10 @@ public class FlashCardWriteActivity extends AppCompatActivity {
 
     // ************************      revise write flashcard ***************************
     public void getSelectedFlashCard(final String flashcard_db_id){
-        String url_getSelectedExam = "http://www.joonandhoon.com/pp/PassPop/android/server/getSelectedFlashCard.php";
+//        String url_getSelectedExam = "http://www.joonandhoon.com/pp/PassPop/android/server/getSelectedFlashCard.php";
+        String url = base_url+"getFlashcardList.php";
         RequestQueue queue = Volley.newRequestQueue(FlashCardWriteActivity.this);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url_getSelectedExam,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -430,37 +438,31 @@ public class FlashCardWriteActivity extends AppCompatActivity {
                             JSONObject jsonObject = new JSONObject(response);
                             String access_token = jsonObject.getString("access");
                             if(access_token.equals("valid")){
-                                JSONObject object = jsonObject.getJSONObject("response");
-                                String exam_code = object.getString("exam_code");
-                                String exam_name = object.getString("exam_name");
-                                String subject_code = object.getString("subject_code");
-                                String subject_name = object.getString("subject_name");
-                                String author_login_type = object.getString("author_login_type");
-                                String author_id = object.getString("author_id");
-                                String author_nickname = object.getString("author_nickname");
-                                String upload_date = object.getString("upload_date");
-                                String upload_time = object.getString("upload_time");
-                                String title = object.getString("title");
+                                JSONObject object = jsonObject.getJSONObject("response1");
+                                String primary_key = object.getString("primary_key");
+                                String major_type = object.getString("major_type");
+                                String g_minor_type = object.getString("minor_type");
+                                String minor_type_kor = object.getString("minor_type_kor");
+                                String flashcard_title = object.getString("flashcard_title");
+                                String user_login_type = object.getString("user_login_type");
+                                String user_id = object.getString("user_id");
+                                String user_nickname = object.getString("user_nickname");
+                                String flashcard_count = object.getString("flashcard_count");
 
-                                selected_exam_name = exam_name;
-                                selected_exam_code = exam_code;
-                                subject_name=subject_name;
-                                subject_number=subject_code;
+                                minor_type = g_minor_type;
 
-                                revise_headerContent( title,  exam_code,  exam_name,  subject_name,  subject_code);
 
-                                JSONArray flashcard_json = jsonObject.getJSONObject("response").getJSONArray("flashcards");
-                                int count = flashcard_json.length();
 
-                                ArrayList<String> flashcards = new ArrayList<>();
+                                revise_headerContent( flashcard_title, minor_type_kor,  minor_type);
+                                JSONObject flashcard_data_object = new JSONObject(Html.fromHtml(object.getString("flashcard_data")).toString());
+                                JSONArray flashcard_json = flashcard_data_object.getJSONArray("flashcard");
+
                                 for(int i = 0 ; i<flashcard_json.length(); i++){
                                     String term = flashcard_json.getJSONObject(i).getString("term");
-                                    String definition = flashcard_json.getJSONObject(i).getString("definition");
-
-                                    flashcards.add(flashcard_json.getJSONObject(i).getString("term"));
-                                    flashcards.add(flashcard_json.getJSONObject(i).getString("definition"));
-
-                                    FlashCardWriteList list = new FlashCardWriteList(term, definition);
+//                                    String definition = flashcard_json.getJSONObject(i).getString("definition");
+                                    String definition = flashcard_json.getJSONObject(i).getString("def");
+                                    Log.e("term ::", term+"/ def ::"+definition);
+                                    FlashCardWriteList list = new FlashCardWriteList(term.replace("<br>", "\n"), definition.replace("<br>", "\n"));
                                     flashcardwriteList.add(list);
                                 }
                                 flashCardWriteListAdapter.notifyDataSetChanged();
@@ -490,20 +492,21 @@ public class FlashCardWriteActivity extends AppCompatActivity {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("token", "passpop");
-                params.put("flashcard_db_id", flashcard_db_id);
+                params.put("type", "selected");
+                params.put("primary_key", flashcard_db_id);
                 return params;
             }
         };
         queue.add(stringRequest);
     }
-    public void revise_headerContent(String title, String exam_code, String exam_name, String subject_name, String subject_code){
+    public void revise_headerContent(String title, String minor_type_kor, String minor_type){
         View headerView = getLayoutInflater().inflate(R.layout.container_flashcard_write_header, null);
         flashcard_title_editText = (EditText) headerView.findViewById(R.id.flashcard_write_title_editText);
         flashcard_select_minor_type = (Button) headerView.findViewById(R.id.flashcard_select_minor_type);
 
         flashcard_title_editText.setText(title);
 
-        flashcard_select_minor_type.setText("과목 선택 : "+subject_name);
+        flashcard_select_minor_type.setText(minor_type_kor);
         flashcard_select_minor_type.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

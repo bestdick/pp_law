@@ -142,8 +142,9 @@ public class StudySubClassFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if(LoginType == null|| G_user_id == null){
-//                    String message = "플래시카드 작성을 하시려면 로그인 후 작성해주시기 바람니다.";
-//                    notifier(message);
+                    String message = "플래시카드 작성을 하시려면 로그인 후 작성해주시기 바람니다.";
+                    String positive_message = "확인";
+                    notifier(message, positive_message);
                 }else{
                     Intent intent = new Intent(getActivity(), FlashCardWriteActivity.class);
                     intent.putExtra("type", "new");
@@ -153,6 +154,18 @@ public class StudySubClassFragment extends Fragment {
             }
         });
         listView.addHeaderView(header_view);
+    }
+    public void notifier(String message, String positive_message){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(message)
+                .setPositiveButton(positive_message, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                })
+                .create()
+                .show();
     }
     private void getFlashcardList(){
         RequestQueue queue = Volley.newRequestQueue(getActivity());
@@ -175,6 +188,7 @@ public class StudySubClassFragment extends Fragment {
                                     String login_type = jsonArray.getJSONObject(i).getString("login_type");
                                     String user_id = jsonArray.getJSONObject(i).getString("user_id");
                                     String user_nickname = jsonArray.getJSONObject(i).getString("user_nickname");
+                                    String user_thumbnail = jsonArray.getJSONObject(i).getString("user_thumbnail");
                                     String upload_date = jsonArray.getJSONObject(i).getString("upload_date");
                                     String upload_time = jsonArray.getJSONObject(i).getString("upload_time");
                                     String revised_date = jsonArray.getJSONObject(i).getString("revised_date");
@@ -185,7 +199,7 @@ public class StudySubClassFragment extends Fragment {
                                     String first_term =jsonArray.getJSONObject(i).getString("first_term");
 
                                     StudyFlashcardList item = new StudyFlashcardList(primary_key, major_type, null, minor_type, null,
-                                            login_type, user_id, user_nickname, upload_date, upload_time, null, null, flashcard_hit, null,
+                                            login_type, user_id, user_nickname, user_thumbnail, upload_date, upload_time, null, null, flashcard_hit, null,
                                             title, count, first_term);
                                     studyFlashcardLists.add(item);
 
