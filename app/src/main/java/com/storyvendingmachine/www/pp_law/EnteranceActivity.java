@@ -20,6 +20,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.ads.MobileAds;
 import com.kakao.auth.Session;
 
 import org.json.JSONArray;
@@ -42,6 +43,8 @@ public class EnteranceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enterance);
+        // Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713
+        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
         getKeyHash();
         //full screen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,

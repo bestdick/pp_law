@@ -18,6 +18,9 @@
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key" />
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~3347511713"/>
 
         <activity android:name=".MainActivity" />
         <activity android:name=".StudyFlashcardViewActivity" />
@@ -33,7 +36,17 @@
         <activity android:name=".LoginActivity" />
         <activity android:name=".LoggedInActivity" />
         <activity android:name=".FlashCardWriteActivity" />
-        <activity android:name=".CommentNoteWriteActivity"></activity>
+        <activity android:name=".CommentNoteWriteActivity" />
+        <activity android:name=".JoinActivity" />
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!-- below is image cropper activity -->
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
+        <activity android:name=".LoggedInSettingActivity"></activity>
     </application>
 
 </manifest>

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.storyvendingmachine.www.pp_law.MainActivity">
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
@@ -25,13 +26,13 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginEnd="16dp"
+                android:fontFamily="monospace"
+                android:gravity="center_vertical"
+                android:text="#홈"
+                android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/toolbar_thumbnail_imageView"
                 app:layout_constraintStart_toStartOf="parent"
-                android:textSize="24sp"
-                android:fontFamily="monospace"
-                android:text="#홈"
-                android:gravity="center_vertical"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
@@ -48,27 +49,16 @@
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.Toolbar>
 
-    <LinearLayout
-        android:id="@+id/container"
-        android:orientation="vertical"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/tabLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/my_toolbar">
-
-    </LinearLayout>
     <android.support.design.widget.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="@color/colorWhite"
-        app:tabIndicatorColor="@color/colorCrimsonRed"
-        app:tabSelectedTextColor="@color/colorCrimsonRed"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/my_toolbar"
+        app:tabIndicatorColor="@color/colorCrimsonRed"
+        app:tabSelectedTextColor="@color/colorCrimsonRed">
 
 
         <android.support.design.widget.TabItem
@@ -76,23 +66,36 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:text="HOME"/>
+            android:text="HOME" />
 
         <android.support.design.widget.TabItem
             android:id="@+id/exam_tab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="EXAM"/>
+            android:text="EXAM" />
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="STUDY"/>
+            android:text="STUDY" />
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="SETTING"/>
+            android:text="SETTING" />
 
     </android.support.design.widget.TabLayout>
+
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout">
+
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

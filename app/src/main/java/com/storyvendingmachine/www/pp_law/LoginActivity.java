@@ -79,9 +79,9 @@ public class LoginActivity extends AppCompatActivity {
         TextView verificationButton = (TextView) findViewById(R.id.resend_verification_code_textView);
         TextView forgottonPasswordButton = (TextView) findViewById(R.id.password_find_textView);
         loginButtonFunction(loginButton);
-//        joinButtonClicked(joinButton);
-//        verificationResendClicked(verificationButton);
-//        forgotton_passsword(forgottonPasswordButton);
+        joinButtonClicked(joinButton);
+        verificationResendClicked(verificationButton);
+        forgotton_passsword(forgottonPasswordButton);
 
 
         toolbar();
@@ -105,39 +105,39 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
-//    public void joinButtonClicked(Button joinButton){
-//        joinButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(LoginActivity.this, JoinActivity.class);
-//                intent.putExtra("type", "join");
-//                startActivity(intent);
-//                slide_left_and_slide_in();
-//            }
-//        });
-//    }
-//    public void verificationResendClicked(TextView verificationResendButton){
-//        verificationResendButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(LoginActivity.this, JoinActivity.class);
-//                intent.putExtra("type", "verification_resend");
-//                startActivity(intent);
-//                slide_left_and_slide_in();
-//            }
-//        });
-//    }
-//    public void forgotton_passsword(TextView forgottonPasswordButton){
-//        forgottonPasswordButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(LoginActivity.this, JoinActivity.class);
-//                intent.putExtra("type", "forgotten_password");
-//                startActivity(intent);
-//                slide_left_and_slide_in();
-//            }
-//        });
-//    }
+    public void joinButtonClicked(Button joinButton){
+        joinButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, JoinActivity.class);
+                intent.putExtra("type", "join");
+                startActivity(intent);
+                slide_left_and_slide_in();
+            }
+        });
+    }
+    public void verificationResendClicked(TextView verificationResendButton){
+        verificationResendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, JoinActivity.class);
+                intent.putExtra("type", "verification_resend");
+                startActivity(intent);
+                slide_left_and_slide_in();
+            }
+        });
+    }
+    public void forgotton_passsword(TextView forgottonPasswordButton){
+        forgottonPasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, JoinActivity.class);
+                intent.putExtra("type", "forgotten_password");
+                startActivity(intent);
+                slide_left_and_slide_in();
+            }
+        });
+    }
 
     public void loginButtonFunction(Button loginButton){
         loginButton.setOnClickListener(new View.OnClickListener() {

@@ -215,10 +215,10 @@ public class LoggedInActivity extends AppCompatActivity {
             change_password_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    Intent intent = new Intent(LoggedInActivity.this, LoggedInSettingsActivity.class);
-//                    intent.putExtra("type", "change_password");
-//                    startActivity(intent);
-//                    slide_left_and_slide_in();
+                    Intent intent = new Intent(LoggedInActivity.this, LoggedInSettingActivity.class);
+                    intent.putExtra("type", "change_password");
+                    startActivity(intent);
+                    slide_left_and_slide_in();
                 }
             });
         }
@@ -228,10 +228,10 @@ public class LoggedInActivity extends AppCompatActivity {
         folder_manage_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(LoggedInActivity.this, LoggedInSettingsActivity.class);
-//                intent.putExtra("type", "flashcard_folder_manager");
-//                startActivityForResult(intent, FOLDER_MANAGER_RESULT);
-//                slide_left_and_slide_in();
+                Intent intent = new Intent(LoggedInActivity.this, LoggedInSettingActivity.class);
+                intent.putExtra("type", "flashcard_folder_manager");
+                startActivityForResult(intent, FOLDER_MANAGER_RESULT);
+                slide_left_and_slide_in();
             }
         });
     }

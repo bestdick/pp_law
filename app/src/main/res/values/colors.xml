@@ -11,4 +11,6 @@
     <color name="colorLightgrey">#D6DBDF</color>
     <color name="colorWhiteSmoke">#F5F5F5</color>
     <color name="colorRed">#E3342F</color>
+    <color name="colorHint">#808080</color>
+    <color name="colorGreen">#8bc34a</color>
 </resources>

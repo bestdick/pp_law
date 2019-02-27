@@ -164,7 +164,7 @@ public class StudySubClassFragment extends Fragment {
         create_flashcard_textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(LoginType == null|| G_user_id == null){
+                if(LoginType.equals("null")|| G_user_id.equals("null")){
                     String message = "플래시카드 작성을 하시려면 로그인 후 작성해주시기 바람니다.";
                     String positive_message = "확인";
                     notifier(message, positive_message);
