@@ -161,28 +161,164 @@ public class StudyFlashcardViewActivity extends AppCompatActivity {
             }
         }else{
             //----------------my_folder--my_folder--my_folder---my_folder--my_folder--my_folder------------
-            Toast.makeText(this, "folder 접속", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "folder 접속", Toast.LENGTH_SHORT).show();
             folder_name = intent.getStringExtra("folder_name");
             folder_code = intent.getStringExtra("folder_code");
             folder_flashcard_length = intent.getStringExtra("flashcard_length");
 
+            Log.e("foler code", folder_code);
             ConstraintLayout like_scrap_hit_layout = (ConstraintLayout) findViewById(R.id.like_scrap_hit_layout);
             LinearLayout flashcard_comment_layout = (LinearLayout) findViewById(R.id.flashcard_comment_layout);
             like_scrap_hit_layout.setVisibility(View.GONE);
             flashcard_comment_layout.setVisibility(View.GONE);
-//
-//            ViewPager flashcard_container = (ViewPager) findViewById(R.id.flashcard_container);
+
+//            ViewPager flashcard_container = (ViewPager) findViewById(R.id.flashcardViewPager);
 //            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
 //            flashcard_container.setLayoutParams(params);
-//            ConstraintLayout outter_most_layout = (ConstraintLayout) findViewById(R.id.outter_most_layout);
-//            outter_most_layout.setBackgroundColor(getResources().getColor(R.color.colorWhiteSmoke));
+            ConstraintLayout outter_most_layout = (ConstraintLayout) findViewById(R.id.outter_most_layout);
+            outter_most_layout.setBackgroundColor(getResources().getColor(R.color.colorWhiteSmoke));
 
-              toolbar();
-//            toolbar(folder_name);
-//            getSelectedMyFlashCard();
+            toolbar();
+            getSelectedMyFlashCard();
         }
     }
 
+    public void getSelectedFlashcard(final String primary_key){
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = base_url+"getFlashcardList.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+
+                    @Override
+                    public void onResponse(String response) {
+                        Log.e("flashcard  response", response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String author_login_type =jsonObject.getJSONObject("response1").getString("user_login_type");
+                            String author_id = jsonObject.getJSONObject("response1").getString("user_id");
+                            author_of_this_flashcard = author_id;
+                            String author_nickname = jsonObject.getJSONObject("response1").getString("user_nickname");
+                            String flashcard_title = jsonObject.getJSONObject("response1").getString("flashcard_title");
+                            String flashcard_count = jsonObject.getJSONObject("response1").getString("flashcard_count");
+                            int flashcard_page_count = (Integer.parseInt(flashcard_count)*2);
+                            JSONObject flashcard_data_object = new JSONObject(Html.fromHtml(jsonObject.getJSONObject("response1").getString("flashcard_data")).toString());
+                            JSONArray flashcard_data_array = flashcard_data_object.getJSONArray("flashcard");
+
+                            ArrayList<String> flashcards = new ArrayList<>();
+                            for(int i = 0 ; i<flashcard_data_array.length(); i++){
+                                flashcards.add(flashcard_data_array.getJSONObject(i).getString("term"));
+                                flashcards.add(flashcard_data_array.getJSONObject(i).getString("def"));
+                            }
+
+                            studyFlashcardViewViewPagerAdapter = new StudyFlashcardViewViewPagerAdapter(getSupportFragmentManager());
+                            studyFlashcardViewViewPagerAdapter.count = flashcard_page_count;
+                            studyFlashcardViewViewPagerAdapter.flashcard_array = flashcards;
+                            studyFlashcardViewViewPagerAdapter.solo_page = true;
+                            studyFlashcardViewViewPagerAdapter.flashcard_or_folder="flashcard";
+
+                            fviewPager = (ViewPager) findViewById(R.id.flashcardViewPager);
+                            fviewPager.setAdapter(studyFlashcardViewViewPagerAdapter);
+                            fviewPager.setOffscreenPageLimit(flashcard_page_count);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }},
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("are we here 6", error.toString());
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams(){
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", "passpop");
+                params.put("type", "selected");
+                params.put("primary_key", primary_key);
+                return params;
+            }
+        };
+        queue.add(stringRequest);
+    }
+
+
+    public void getSelectedMyFlashCard(){
+//        String url_getSelectedExam = "http://www.joonandhoon.com/pp/PassPop/android/server/getSelectedMyFlashCard.php";
+        String url = base_url+"getSelectedMyFlashCard.php";
+        RequestQueue queue = Volley.newRequestQueue(StudyFlashcardViewActivity.this);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        Log.e("folder response", response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            global_flashcard_my_jsonArray = jsonObject.getJSONArray("response");
+                            String access_token = jsonObject.getString("access");
+                            if(access_token.equals("valid")){
+                                JSONArray array = jsonObject.getJSONArray("response");
+                                int count = (array.length()*2);
+                                ArrayList<String> flashcards = new ArrayList<>();
+                                for(int i = 0 ; i<array.length(); i++){
+                                    flashcards.add(array.getJSONObject(i).getString("term"));
+                                    flashcards.add(array.getJSONObject(i).getString("def"));
+                                }
+
+
+                                studyFlashcardViewViewPagerAdapter = new StudyFlashcardViewViewPagerAdapter(getSupportFragmentManager());
+                                studyFlashcardViewViewPagerAdapter.count = count;
+                                studyFlashcardViewViewPagerAdapter.flashcard_array = flashcards;
+                                studyFlashcardViewViewPagerAdapter.solo_page = true;
+                                studyFlashcardViewViewPagerAdapter.flashcard_or_folder="folder";
+
+                                fviewPager = (ViewPager) findViewById(R.id.flashcardViewPager);
+                                fviewPager.setAdapter(studyFlashcardViewViewPagerAdapter);
+                                fviewPager.setOffscreenPageLimit(count);
+
+
+//                                String author_nickname = jsonObject.getJSONObject("response").getString("author_nickname");
+//                                String upload_date = jsonObject.getJSONObject("response").getString("upload_date");
+
+//                                flashcard_author_textView.setText("작성자 "+author_nickname);
+//                                flashcard_written_date_textView.setText("작성일 "+upload_date);
+                            }else if(access_token.equals("invalid")){
+
+                            }else{
+
+                            }
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //Toast.makeText(getActivity(), "volley error", Toast.LENGTH_LONG).show();
+                //                        String message = "인터넷 연결 에러.. 다시 한번 시도해 주세요...ㅠ ㅠ";
+                //                        toast(message);
+                //                        getExamNameAndCode(); // 인터넷 에러가 났을시 다시 한번 시도한다.
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", "passpop");
+                params.put("flashcard_folder_name", folder_name);
+                params.put("flashcard_folder_code", folder_code);
+                params.put("login_type", LoginType);
+                params.put("user_id", G_user_id);
+                return params;
+            }
+        };
+        queue.add(stringRequest);
+    }
 
 
     public void getScrapFolderName(){
@@ -540,16 +676,6 @@ public class StudyFlashcardViewActivity extends AppCompatActivity {
         queue.add(stringRequest);
     }
 
-
-
-
-
-
-
-
-
-
-
     public void likeButtonClicked(){
 //        TextView like_button = (TextView) findViewById(R.id.like_count_textView);
         like_count_textView.setOnClickListener(new View.OnClickListener() {
@@ -740,11 +866,6 @@ public class StudyFlashcardViewActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
-
     private void toolbar(){
         Toolbar tb = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(tb);
@@ -763,65 +884,7 @@ public class StudyFlashcardViewActivity extends AppCompatActivity {
         flashcard_db_id = primary_key;
         getSelectedFlashcard((primary_key));
     }
-    public void getSelectedFlashcard(final String primary_key){
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = base_url+"getFlashcardList.php";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
 
-                    @Override
-                    public void onResponse(String response) {
-                        Log.e("flashcard  response", response);
-                        try {
-                                JSONObject jsonObject = new JSONObject(response);
-                                String author_login_type =jsonObject.getJSONObject("response1").getString("user_login_type");
-                                String author_id = jsonObject.getJSONObject("response1").getString("user_id");
-                                author_of_this_flashcard = author_id;
-                                String author_nickname = jsonObject.getJSONObject("response1").getString("user_nickname");
-                                String flashcard_title = jsonObject.getJSONObject("response1").getString("flashcard_title");
-                                String flashcard_count = jsonObject.getJSONObject("response1").getString("flashcard_count");
-                                int flashcard_page_count = (Integer.parseInt(flashcard_count)*2);
-                                JSONObject flashcard_data_object = new JSONObject(Html.fromHtml(jsonObject.getJSONObject("response1").getString("flashcard_data")).toString());
-                                JSONArray flashcard_data_array = flashcard_data_object.getJSONArray("flashcard");
-
-                                ArrayList<String> flashcards = new ArrayList<>();
-                                for(int i = 0 ; i<flashcard_data_array.length(); i++){
-                                    flashcards.add(flashcard_data_array.getJSONObject(i).getString("term"));
-                                    flashcards.add(flashcard_data_array.getJSONObject(i).getString("def"));
-                                }
-
-                                studyFlashcardViewViewPagerAdapter = new StudyFlashcardViewViewPagerAdapter(getSupportFragmentManager());
-                                studyFlashcardViewViewPagerAdapter.count = flashcard_page_count;
-                                studyFlashcardViewViewPagerAdapter.flashcard_array = flashcards;
-                                studyFlashcardViewViewPagerAdapter.solo_page = true;
-                                studyFlashcardViewViewPagerAdapter.flashcard_or_folder="flashcard";
-
-                                fviewPager = (ViewPager) findViewById(R.id.flashcardViewPager);
-                                fviewPager.setAdapter(studyFlashcardViewViewPagerAdapter);
-                                fviewPager.setOffscreenPageLimit(flashcard_page_count);
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }},
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("are we here 6", error.toString());
-                    }
-                }
-        ) {
-            @Override
-            protected Map<String, String> getParams(){
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("token", "passpop");
-                params.put("type", "selected");
-                params.put("primary_key", primary_key);
-                return params;
-            }
-        };
-        queue.add(stringRequest);
-    }
     public void getUpdatedFlashCard(){
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = base_url+"getFlashcardList.php";

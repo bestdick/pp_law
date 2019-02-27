@@ -15,11 +15,14 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -369,27 +372,79 @@ public class StudySubClassFragment extends Fragment {
                     Log.e("footer clicked position", String.valueOf(i));
                     create_new_folder_dialog();
                 }else{
-                    Log.e("clicked position", String.valueOf(i));
+
+                    String folder_code = studyFlashcardLists.get(i-1).getFolder_code();
+                    String folder_name = studyFlashcardLists.get(i-1).getFolder_name();
+                    String flashcard_length = studyFlashcardLists.get(i-1).getFlashcard_length();
+
+                    Log.e("clicked position", String.valueOf(i)+ "// "+ folder_name);
+                    Intent intent = new Intent(getActivity(), StudyFlashcardViewActivity.class);
+                    intent.putExtra("type", "my_folder");
+                    intent.putExtra("folder_name", folder_name);
+                    intent.putExtra("folder_code", folder_code);
+                    intent.putExtra("flashcard_length", flashcard_length);
+                    startActivity(intent);
+                    slide_left_and_slide_in();
                 }
 
             }
         });
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public boolean onItemLongClick(AdapterView<?> adapterView, View v, int i, long l) {
                 if(i==0){
 
-                }else if(i == studyFlashcardLists.size() ){
+                }else if(i == (studyFlashcardLists.size()+1)){
 
                 }else{
                     Log.e("long clicked position", String.valueOf(i));
+                    final String folder_code = studyFlashcardLists.get(i-1).getFolder_code();
+                    String folder_name = studyFlashcardLists.get(i-1).getFolder_name();
+                    String flashcard_length = studyFlashcardLists.get(i-1).getFlashcard_length();
+
+                    final LinearLayout delete_linLayout = (LinearLayout) v.findViewById(R.id.delete_linLayout);
+                    final TextView flashcard_folder_delete_textView = (TextView) v.findViewById(R.id.flashcard_folder_delete_textView);
+                    final TextView flashcard_folder_content_delete_textView = (TextView) v.findViewById(R.id.flashcard_folder_content_delete_textView);
+                    final ImageView delete_close_imageView = (ImageView) v.findViewById(R.id.delete_close_imageView);
+
+                    slideLeft(delete_linLayout);
+                    if (i == 1) {
+                        flashcard_folder_delete_textView.setVisibility(View.GONE);
+                    }
+                    flashcard_folder_delete_textView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String message = "폴더 삭제\n폴더를 삭제하시겠습니까? 삭제하시면 폴더 안의 모든 내용이 삭제되며 복구가 불가능 합니다.";
+                            String pos_message = "삭제";
+                            String neg_message = "취소";
+                            del_notifier(message, pos_message, neg_message, folder_code, "del_folder", delete_linLayout);
+                            Toast.makeText(getActivity(), "폴더 삭제", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    flashcard_folder_content_delete_textView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String message = "폴더 내용 삭제\n폴더 내용을 삭제하시겠습니까? 삭제된 데이터는 복구가 불가능 합니다.";
+                            String pos_message = "삭제";
+                            String neg_message = "취소";
+                            del_notifier(message, pos_message, neg_message, folder_code, "del_contents", delete_linLayout);
+                            Toast.makeText(getActivity(), "폴더 삭제", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    delete_close_imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            slideRight(delete_linLayout);
+                        }
+                    });
+
+
                 }
 
                 return true;
             }
         });
     }
-
     private void create_new_folder_dialog(){
         android.support.v7.app.AlertDialog.Builder ad = new android.support.v7.app.AlertDialog.Builder(getActivity());
         ad.setTitle("폴더 추가");
@@ -430,7 +485,7 @@ public class StudySubClassFragment extends Fragment {
                     String pos_mess = "확인";
                     notifier(mess, pos_mess);
                 }else{
-//                    uploadNewlyCreatedFolder(input_folder_name);
+                    uploadNewlyCreatedFolder(input_folder_name);
                 }
             }
         });
@@ -442,6 +497,177 @@ public class StudySubClassFragment extends Fragment {
         });
         ad.show();
     }
+    private void uploadNewlyCreatedFolder(final String folder_name){
+//        String url_getSelectedExam = "http://www.joonandhoon.com/pp/PassPop/android/server/uploadNewlyCreatedFolder.php";
+        String url = base_url+"uploadNewlyCreatedFolder.php";
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.e("Newly Created Folder", response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String access_token = jsonObject.getString("access");
+                            if(access_token.equals("valid")){
+                                String result = jsonObject.getString("response");
+                                // ***********************************************
+                                // 1. success
+                                // 2. fail
+                                // 3. folder_already_exist
+                                // 4. max_folder_reached
+                                // ***********************************************
+                                if(result.equals("success")){
+                                    String message = "폴더를 성공적으로 만들었습니다.";
+                                    String pos_message = "확인";
+                                    notifier(message, pos_message);
+
+//                                    scrap_folder_layout.removeAllViews();
+//                                    getScrapFolderName();
+                                    studyFlashcardLists.clear();
+                                    getFlashcardList();
+                                }else if(result.equals("folder_already_exist")){
+                                    String message = "'"+folder_name +"'폴더는 이미 존재합니다. 다른 이름으로 폴더를 만들어 주세요.";
+                                    String pos_message = "확인";
+                                    notifier(message, pos_message);
+                                }else if(result.equals("max_folder_reached")){
+                                    String message = "폴더 한도 초과 하였습니다. 나의 페이지에서 한도를 늘려주세요";
+                                    String pos_message = "확인";
+                                    notifier(message, pos_message);
+                                }else{
+                                    //업로드 실패
+                                }
+                            }else {
+                                //token invalid
+
+                            }
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //Toast.makeText(getActivity(), "volley error", Toast.LENGTH_LONG).show();
+                //                        String message = "인터넷 연결 에러.. 다시 한번 시도해 주세요...ㅠ ㅠ";
+                //                        toast(message);
+                //                        getExamNameAndCode(); // 인터넷 에러가 났을시 다시 한번 시도한다.
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", "passpop");
+                params.put("login_type", LoginType);
+                params.put("user_id", G_user_id);
+                params.put("folder_name", folder_name);
+                return params;
+            }
+        };
+        queue.add(stringRequest);
+    }
+    private void del_notifier(String message, String positive_message, String negative_message,
+                              final String folder_code, final String del_type, final LinearLayout delete_linLayout){
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
+        builder.setMessage(message)
+                .setPositiveButton(positive_message, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        updateDeleteSelectedFolder(folder_code,  del_type);
+                    }
+                })
+                .setNegativeButton(negative_message, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        slideRight(delete_linLayout);
+                    }
+                })
+                .create()
+                .show();
+    }
+    public void updateDeleteSelectedFolder(final String folder_code, final String del_type){
+//        String url = "http://www.joonandhoon.com/pp/PassPop/android/server/updateDeleteSelectedFolder.php";
+        String url = base_url+"updateDeleteSelectedFolder.php";
+        RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.e("del response ::", response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String access = jsonObject.getString("access");
+                            if(access.equals("valid")){
+                                // access valid
+                                String delType = jsonObject.getString("del_type");
+                                String result_response = jsonObject.getString("response");
+                                if(result_response.equals("success")){
+                                    studyFlashcardLists.clear();
+                                    getFlashcardList();
+                                }else if(result_response.equals("fail")){
+
+                                }else{
+
+                                }
+                            }else{
+                                //access invalid
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //Toast.makeText(getActivity(), "volley error", Toast.LENGTH_LONG).show();
+//                        String message = "인터넷 연결 에러.. 다시 한번 시도해 주세요...ㅠ ㅠ";
+//                        toast(message);
+//                        getExamNameAndCode(); // 인터넷 에러가 났을시 다시 한번 시도한다.
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", "passpop");
+                params.put("login_type", LoginType);
+                params.put("user_id", G_user_id);
+                params.put("folder_code", folder_code);
+                params.put("del_type", del_type);
+                return params;
+            }
+        };
+        queue.add(stringRequest);
+    }
+    public void slideLeft(View view){
+        view.setVisibility(View.VISIBLE);
+        TranslateAnimation animate = new TranslateAnimation(
+                view.getWidth(),                 // fromXDelta
+                0,                 // toXDelta
+                0,  // fromYDelta
+                0);                // toYDelta
+        animate.setDuration(500);
+//        animate.setFillAfter(true);
+        view.startAnimation(animate);
+    }
+    public void slideRight(View view){
+        TranslateAnimation animate = new TranslateAnimation(
+                0,                 // fromXDelta
+                view.getWidth(),                 // toXDelta
+                0,                 // fromYDelta
+                0); // toYDelta
+        animate.setDuration(500);
+//        animate.setFillAfter(true);
+        view.startAnimation(animate);
+        view.setVisibility(View.INVISIBLE);
+    }
+
 
 //    // TODO: Rename method, update argument and hook method into UI event
 //    public void onButtonPressed(Uri uri) {
@@ -481,4 +707,8 @@ public class StudySubClassFragment extends Fragment {
 //        // TODO: Update argument type and name
 //        void onFragmentInteraction(Uri uri);
 //    }
+
+    public void slide_left_and_slide_in(){
+        getActivity().overridePendingTransition(R.anim.slide_in, R.anim.slide_left_bit); // 처음이 앞으로 들어올 activity 두번째가 현재 activity 가 할 애니매이션
+    }
 }

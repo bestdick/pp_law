@@ -5,7 +5,6 @@
         android:id="@+id/solo_view_menu"
         android:title="solo_view_menu"
         android:icon="@drawable/icon_solo_view"
-        >
-        <!--app:showAsAction="ifRoom"-->
+        app:showAsAction="ifRoom">
     </item>
 </menu>
