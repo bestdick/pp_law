@@ -8,10 +8,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -78,6 +84,9 @@ public class StudySubClassFragment extends Fragment {
     int flashcard_menu;
     int total_list_count;
     int page;
+
+    View footer_view;
+    int footer_view_flag;
     public static StudySubClassFragment newInstance(String param1, String param2) {
         StudySubClassFragment fragment = new StudySubClassFragment();
         Bundle args = new Bundle();
@@ -97,6 +106,8 @@ public class StudySubClassFragment extends Fragment {
         flashcard_menu = 0;
         total_list_count=0;
         page=0;
+
+        footer_view_flag = -1;
     }
 
     @Override
@@ -104,6 +115,7 @@ public class StudySubClassFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootview =inflater.inflate(R.layout.fragment_study_sub_class, container, false);
+        footer_view =getLayoutInflater().inflate(R.layout.container_folder_add_footer_view, null);
         initializer(rootview);
         swiper(rootview);
         return rootview;
@@ -185,35 +197,52 @@ public class StudySubClassFragment extends Fragment {
                     public void onResponse(String response) {
                         Log.e("exam list response", response);
                         try {
-
                                 JSONObject jsonObject = new JSONObject(response);
-                                total_list_count = Integer.parseInt(jsonObject.getString("total_count"));
-                                JSONArray jsonArray = jsonObject.getJSONArray("response1");
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    String primary_key = jsonArray.getJSONObject(i).getString("primary_key");
-                                    String major_type = jsonArray.getJSONObject(i).getString("major_type");
-                                    String minor_type = jsonArray.getJSONObject(i).getString("minor_type");
-                                    String login_type = jsonArray.getJSONObject(i).getString("login_type");
-                                    String user_id = jsonArray.getJSONObject(i).getString("user_id");
-                                    String user_nickname = jsonArray.getJSONObject(i).getString("user_nickname");
-                                    String user_thumbnail = jsonArray.getJSONObject(i).getString("user_thumbnail");
-                                    String upload_date = jsonArray.getJSONObject(i).getString("upload_date");
-                                    String upload_time = jsonArray.getJSONObject(i).getString("upload_time");
-                                    String revised_date = jsonArray.getJSONObject(i).getString("revised_date");
-                                    String revised_time = jsonArray.getJSONObject(i).getString("revised_time");
-                                    String flashcard_hit = jsonArray.getJSONObject(i).getString("flashcard_hit");
-                                    String title = jsonArray.getJSONObject(i).getString("title");
-                                    String count = jsonArray.getJSONObject(i).getString("count");
-                                    String first_term =jsonArray.getJSONObject(i).getString("first_term");
+                                String return_menu = jsonObject.getString("menu");
+                                if(return_menu.equals("folder_list")){
+                                    String basic_folder_count = jsonObject.getString("basic_folder_flashcard_count");//기본 폴더
+                                    StudyFlashcardList basic_item = new StudyFlashcardList("folder_list", null,null,null,null,null,null,null,
+                                            null,null,null,null,null,null,null,null,null,null,null,
+                                            "0", "기본 폴더", basic_folder_count);
+                                    studyFlashcardLists.add(basic_item);
+                                    JSONArray jsonArray = jsonObject.getJSONArray("response1");
+                                    for(int i = 0 ; i < jsonArray.length(); i++){
+                                        String folder_name = jsonArray.getJSONObject(i).getString("scrap_folder_name");
+                                        String folder_code = jsonArray.getJSONObject(i).getString("scrap_folder_code");
+                                        String total_flashcads_in_folder = jsonArray.getJSONObject(i).getString("total_flashcads_in_folder");
+                                        StudyFlashcardList item = new StudyFlashcardList("folder_list", null,null,null,null,null,null,null,
+                                                null,null,null,null,null,null,null,null,null,null,null,
+                                                folder_code, folder_name, total_flashcads_in_folder);
+                                        studyFlashcardLists.add(item);
+                                    }
+                                }else {
+                                    total_list_count = Integer.parseInt(jsonObject.getString("total_count"));
+                                    JSONArray jsonArray = jsonObject.getJSONArray("response1");
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        String primary_key = jsonArray.getJSONObject(i).getString("primary_key");
+                                        String major_type = jsonArray.getJSONObject(i).getString("major_type");
+                                        String minor_type = jsonArray.getJSONObject(i).getString("minor_type");
+                                        String login_type = jsonArray.getJSONObject(i).getString("login_type");
+                                        String user_id = jsonArray.getJSONObject(i).getString("user_id");
+                                        String user_nickname = jsonArray.getJSONObject(i).getString("user_nickname");
+                                        String user_thumbnail = jsonArray.getJSONObject(i).getString("user_thumbnail");
+                                        String upload_date = jsonArray.getJSONObject(i).getString("upload_date");
+                                        String upload_time = jsonArray.getJSONObject(i).getString("upload_time");
+                                        String revised_date = jsonArray.getJSONObject(i).getString("revised_date");
+                                        String revised_time = jsonArray.getJSONObject(i).getString("revised_time");
+                                        String flashcard_hit = jsonArray.getJSONObject(i).getString("flashcard_hit");
+                                        String title = jsonArray.getJSONObject(i).getString("title");
+                                        String count = jsonArray.getJSONObject(i).getString("count");
+                                        String first_term = jsonArray.getJSONObject(i).getString("first_term");
 
-                                    StudyFlashcardList item = new StudyFlashcardList(primary_key, major_type, null, minor_type, null,
-                                            login_type, user_id, user_nickname, user_thumbnail, upload_date, upload_time, null, null, flashcard_hit, null,
-                                            title, count, first_term);
-                                    studyFlashcardLists.add(item);
-
+                                        StudyFlashcardList item = new StudyFlashcardList("list", primary_key, major_type, null, minor_type, null,
+                                                login_type, user_id, user_nickname, user_thumbnail, upload_date, upload_time, null, null, flashcard_hit, null,
+                                                title, count, first_term, null, null, null);
+                                        studyFlashcardLists.add(item);
+                                    }
                                 }
-                                studyFlashcardListviewAdapter.notifyDataSetChanged();
 
+                                studyFlashcardListviewAdapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -232,8 +261,12 @@ public class StudySubClassFragment extends Fragment {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("token", "passpop");
                 params.put("type", "list");// list or selected
-                params.put("flashcard_menu", String.valueOf(flashcard_menu));
                 params.put("page", String.valueOf(page));
+                params.put("flashcard_menu", String.valueOf(flashcard_menu));
+                // flashcaard_db_id 는 여기서ㅏ 사용안함
+                params.put("login_type", LoginType);
+                params.put("user_id", G_user_id);
+
                 return params;
             }
         };
@@ -280,13 +313,15 @@ public class StudySubClassFragment extends Fragment {
                 Log.e("value is", "" + which);
                 switch (which) {
                     case 0:
-                        view_category_textView.setText(list[0].toString());
+                        remove_footer_view();
                         studyFlashcardLists.clear();
                         flashcard_menu = 0;
                         page=0;
                         getFlashcardList();
+                        view_category_textView.setText(list[0].toString());
                         break;
                     case 1:
+                        remove_footer_view();
                         studyFlashcardLists.clear();
                         flashcard_menu = 1;
                         page=0;
@@ -294,6 +329,7 @@ public class StudySubClassFragment extends Fragment {
                         view_category_textView.setText(list[1].toString());
                         break;
                     case 2:
+                        remove_footer_view();
                         studyFlashcardLists.clear();
                         flashcard_menu = 2;
                         page=0;
@@ -301,10 +337,12 @@ public class StudySubClassFragment extends Fragment {
                         view_category_textView.setText(list[2].toString());
                         break;
                     case 3:
+                        remove_footer_view();
                         studyFlashcardLists.clear();
                         flashcard_menu = 3;
                         page=0;
                         getFlashcardList();
+                        myFolderListClickControl();
                         view_category_textView.setText(list[3].toString());
                         break;
                 }
@@ -312,7 +350,98 @@ public class StudySubClassFragment extends Fragment {
         });
         builder.show();
     }
+    public void remove_footer_view(){
+        if(footer_view_flag == 1){
+            listView.removeFooterView(footer_view);
+        }
+        footer_view_flag = -1;
+    }
+    public void myFolderListClickControl(){
+        footer_view_flag = 1;
+        listView.addFooterView(footer_view);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if(i==0){
 
+                }else if(i == (studyFlashcardLists.size()+1) ){
+                    //footer click
+                    Log.e("footer clicked position", String.valueOf(i));
+                    create_new_folder_dialog();
+                }else{
+                    Log.e("clicked position", String.valueOf(i));
+                }
+
+            }
+        });
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if(i==0){
+
+                }else if(i == studyFlashcardLists.size() ){
+
+                }else{
+                    Log.e("long clicked position", String.valueOf(i));
+                }
+
+                return true;
+            }
+        });
+    }
+
+    private void create_new_folder_dialog(){
+        android.support.v7.app.AlertDialog.Builder ad = new android.support.v7.app.AlertDialog.Builder(getActivity());
+        ad.setTitle("폴더 추가");
+        ad.setMessage("폴더 이름을 적어주세요");
+        LinearLayout linearLayout = new LinearLayout(getActivity());
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        linearLayout.setPadding(32,0,32,0);
+
+        final EditText editText = new EditText(getActivity());
+        final TextView count_textView = new TextView(getActivity());
+        count_textView.setGravity(Gravity.RIGHT);
+        count_textView.setText("0/80");
+
+        linearLayout.addView(editText);
+        linearLayout.addView(count_textView);
+
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                count_textView.setText(charSequence.length()+"/80");
+            }
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        ad.setView(linearLayout);
+        ad.setPositiveButton("추가", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String input_folder_name = editText.getText().toString();
+                if(input_folder_name.isEmpty()){
+                    String mess = "폴더이름을 입력해주세요";
+                    String pos_mess = "확인";
+                    notifier(mess, pos_mess);
+                }else{
+//                    uploadNewlyCreatedFolder(input_folder_name);
+                }
+            }
+        });
+        ad.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        ad.show();
+    }
 
 //    // TODO: Rename method, update argument and hook method into UI event
 //    public void onButtonPressed(Uri uri) {

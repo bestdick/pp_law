@@ -5,6 +5,7 @@ package com.storyvendingmachine.www.pp_law;
  */
 
 public class StudyFlashcardList {
+    String menu_type;
     String flashcard_db_id;
     String major_type;
     String major_type_kor;
@@ -23,6 +24,18 @@ public class StudyFlashcardList {
     String title;
     String flashcard_count;
     String flashcard_first_term;
+
+    //when menu type is folder_list
+    String folder_code;
+    String folder_name;
+    String flashcard_length;
+    public String getMenu_type() {
+        return menu_type;
+    }
+
+    public void setMenu_type(String menu_type) {
+        this.menu_type = menu_type;
+    }
 
     public String getFlashcard_db_id() {
         return flashcard_db_id;
@@ -176,7 +189,32 @@ public class StudyFlashcardList {
         this.user_thumbnail = user_thumbnail;
     }
 
-    public StudyFlashcardList(String flashcard_db_id, String major_type, String major_type_kor, String minor_type, String minor_type_kor, String login_type, String user_id, String user_nickname, String user_thumbnail, String upload_date, String upload_time, String scrap_count, String comment_count, String hit_count, String like_count, String title, String flashcard_count, String flashcard_first_term) {
+    public String getFolder_code() {
+        return folder_code;
+    }
+
+    public void setFolder_code(String folder_code) {
+        this.folder_code = folder_code;
+    }
+
+    public String getFolder_name() {
+        return folder_name;
+    }
+
+    public void setFolder_name(String folder_name) {
+        this.folder_name = folder_name;
+    }
+
+    public String getFlashcard_length() {
+        return flashcard_length;
+    }
+
+    public void setFlashcard_length(String flashcard_length) {
+        this.flashcard_length = flashcard_length;
+    }
+
+    public StudyFlashcardList(String menu_type, String flashcard_db_id, String major_type, String major_type_kor, String minor_type, String minor_type_kor, String login_type, String user_id, String user_nickname, String user_thumbnail, String upload_date, String upload_time, String scrap_count, String comment_count, String hit_count, String like_count, String title, String flashcard_count, String flashcard_first_term, String folder_code, String folder_name, String flashcard_length) {
+        this.menu_type = menu_type;
         this.flashcard_db_id = flashcard_db_id;
         this.major_type = major_type;
         this.major_type_kor = major_type_kor;
@@ -195,5 +233,8 @@ public class StudyFlashcardList {
         this.title = title;
         this.flashcard_count = flashcard_count;
         this.flashcard_first_term = flashcard_first_term;
+        this.folder_code = folder_code;
+        this.folder_name = folder_name;
+        this.flashcard_length = flashcard_length;
     }
 }

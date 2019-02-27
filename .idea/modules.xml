@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/pp_law.iml" filepath="$PROJECT_DIR$/pp_law.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../../../Administrator/AndroidStudioProjects/pp_law/.idea/pp_law.iml" filepath="$PROJECT_DIR$/../../../Administrator/AndroidStudioProjects/pp_law/.idea/pp_law.iml" />
+      <module fileurl="file://C:\Users\Administrator\AndroidStudioProjects\pp_law\.idea\pp_law.iml" filepath="C:\Users\Administrator\AndroidStudioProjects\pp_law\.idea\pp_law.iml" />
     </modules>
   </component>
 </project>
