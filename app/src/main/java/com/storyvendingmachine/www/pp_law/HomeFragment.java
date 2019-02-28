@@ -1,12 +1,30 @@
 package com.storyvendingmachine.www.pp_law;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.storyvendingmachine.www.pp_law.UrlBase.base_url;
 
 
 ///**
@@ -65,8 +83,44 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootview =inflater.inflate(R.layout.fragment_home, container, false);
-
+        getAnnouncement_Error_Suggestion(rootview);
         return rootview;
+    }
+
+    public void getAnnouncement_Error_Suggestion(View rootview){
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        String url = base_url + "getAnnouncement_Error_Suggestion.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.e("announce response", response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams(){
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", "passpop");
+                return params;
+            }
+        };
+        queue.add(stringRequest);
     }
 
 //    // TODO: Rename method, update argument and hook method into UI event
